@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import NewContact from './NewContact'
+import EditContact from './EditContact'
 
 function Home() {
   const navigate = useNavigate()
@@ -12,17 +13,20 @@ function Home() {
     const [error, setError] = useState('')
     const [isNew, setIsNew] = useState(true)
     const [modalOpen, setModalOpen] = useState(false)
+    const [editOpen, setEditOpen] = useState(false);
+    const [contactId, setContactId] = useState(0)
 
     useEffect(() => {
         axios.get('https://localhost:7100/Contacts') // example API
         .then(response => {
-            setContacts(response.data)
+            setContacts(response.data);
+            
             console.log(response.data);
             setLoading(false)
         })
         .catch(err => {
-            setError('Failed to fetch users')
-            //setLoading(false)
+            setError('Failed to fetch users server must be offline due to azure free plan, please refresh')
+            console.log("Entra a error");
         })
     }, [loading])
 
@@ -38,11 +42,17 @@ function Home() {
       setModalOpen(true)
     }
 
-    const handleEdit = (contact) => {
-      setIsNew(false);
-      setModalOpen(true)
+    const handleEdit = (contactId) => {
+      console.log("this is the contact id");
+      console.log(contactId);
+      setContactId(contactId);
+      setEditOpen(true)
     }
 
+    const handleUpdateUser = (contact) => {
+    
+    }
+    
     const handleAddUser = (contact) => {
    
     const newContact = { ...contact }
@@ -118,20 +128,32 @@ function Home() {
             <td style={styles.td}>
               <a onClick={(e) => {
                 e.preventDefault()
-                handleEdit(user)
+                handleEdit(user.contactId)
                 }} title="Edit"><i className="fa-solid fa-pen"></i>
                 </a>
               </td>
           </tr>
         ))}
       </tbody>
-    </table>  
+    </table>
+    {error != "" && (
+      <div>
+      <h2><b>{error}</b></h2>
+    </div>
+)}
     </div>
    <NewContact
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         isNew = {isNew}
         onSave={handleAddUser} 
+      />
+
+      <EditContact
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        contactId ={contactId}
+        onSave={handleUpdateUser} 
       />
     </>
   )
