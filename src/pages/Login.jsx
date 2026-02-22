@@ -11,15 +11,23 @@ function Login() {
 
     // Save user (temporary – replace with API later)
     localStorage.setItem('username', username)
-
-    navigate('/home')
+    
+    if(username == "kyros")
+    {
+        navigate('/home')
+    }else
+    {
+        alert('Invalid user')
+    }
   }
 
   return (
+
     <div style={styles.container}>
       <div style={styles.card}>
-        <h2>Login</h2>
+        <h2>KAYROS</h2>
 
+    <label>Username</label>
         <input
           type="text"
           placeholder="Username"
@@ -42,7 +50,7 @@ const styles = {
     height: '100vh',
     alignItems: 'center',
     justifyContent: 'center',
-    background: '#f4f6f8'
+    background: '#0a0b0b'
   },
   card: {
     padding: 30,
@@ -60,7 +68,10 @@ const styles = {
     width: '100%',
     padding: 10,
     cursor: 'pointer'
-  }
+  },
+   userLabel: {
+    
+   }
 }
 
 export default Login
