@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
+import NewContact from './NewContact'
 
 function Home() {
   const navigate = useNavigate()
@@ -15,19 +16,20 @@ function Home() {
     const [contacts, setContacts] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
+     const [modalOpen, setModalOpen] = useState(false)
 
     useEffect(() => {
-    axios.get('https://localhost:7100/Contacts') // example API
-      .then(response => {
-        setContacts(response.data)
-        console.log(response.data);
-        //setLoading(false)
-      })
-      .catch(err => {
-        setError('Failed to fetch users')
-        //setLoading(false)
-      })
-  }, [])
+        axios.get('https://localhost:7100/Contacts') // example API
+        .then(response => {
+            setContacts(response.data)
+            console.log(response.data);
+            //setLoading(false)
+        })
+        .catch(err => {
+            setError('Failed to fetch users')
+            //setLoading(false)
+        })
+    }, [])
 
 
   const logout = () => {
@@ -35,6 +37,11 @@ function Home() {
     localStorage.removeItem('username')
     navigate('/login')
   }
+
+  const onAddContact = () => {
+      setModalOpen(true)
+  }
+
 
   return (
     <>
@@ -65,7 +72,7 @@ function Home() {
             
         </div>
          <div style={styles.box}>
-            <button onClick={logout} >
+            <button onClick={onAddContact} >
                 Add New
             </button>
         </div>
@@ -101,7 +108,11 @@ function Home() {
       </tbody>
     </table>  
     </div>
-   
+   <NewContact
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        /* onSave={handleAddUser} */
+      />
     </>
   )
 }
