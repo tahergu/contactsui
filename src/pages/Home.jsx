@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import React, { useState, useEffect } from 'react'
 
 function Home() {
   const navigate = useNavigate()
@@ -10,7 +12,26 @@ function Home() {
   { id: 3, name: 'John', email: 'john@example.com' },
 ]
 
+    const [contacts, setContacts] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState('')
+
+    useEffect(() => {
+    axios.get('https://localhost:7100/Contacts') // example API
+      .then(response => {
+        setContacts(response.data)
+        console.log(response.data);
+        //setLoading(false)
+      })
+      .catch(err => {
+        setError('Failed to fetch users')
+        //setLoading(false)
+      })
+  }, [])
+
+
   const logout = () => {
+    
     localStorage.removeItem('username')
     navigate('/login')
   }
@@ -62,18 +83,18 @@ function Home() {
         </tr>
       </thead>
       <tbody>
-        {users.map(user => (
+        {contacts.map(user => (
           <tr
             key={user.id}
             style={{
               ...(user.id % 2 === 0 ? styles.trHover : {}),
             }}
           >
-            <td style={styles.td}>{user.id}</td>
             <td style={styles.td}>{user.name}</td>
+            <td style={styles.td}>{user.phone}</td>
+            <td style={styles.td}>{user.fax}</td>
             <td style={styles.td}>{user.email}</td>
-            <td style={styles.td}>{user.email}</td>
-            <td style={styles.td}>{user.email}</td>
+            <td style={styles.td}>{user.lastUpdatedDate}</td>
             <td style={styles.td}>{user.email}</td>
           </tr>
         ))}
