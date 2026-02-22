@@ -6,17 +6,12 @@ import NewContact from './NewContact'
 function Home() {
   const navigate = useNavigate()
   const username = localStorage.getItem('username')
-
-  const users = [
-  { id: 1, name: 'Andres', email: 'andres@example.com' },
-  { id: 2, name: 'Maria', email: 'maria@example.com' },
-  { id: 3, name: 'John', email: 'john@example.com' },
-]
-
+  
     const [contacts, setContacts] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
-     const [modalOpen, setModalOpen] = useState(false)
+    const [isNew, setIsNew] = useState(true)
+    const [modalOpen, setModalOpen] = useState(false)
 
     useEffect(() => {
         axios.get('https://localhost:7100/Contacts') // example API
@@ -38,16 +33,19 @@ function Home() {
     navigate('/login')
   }
 
-  const onAddContact = () => {
+    const onAddContact = () => {
+      setIsNew(true);
       setModalOpen(true)
-  }
+    }
 
-   const handleAddUser = (contact) => {
+    const handleEdit = (contact) => {
+      setIsNew(false);
+      setModalOpen(true)
+    }
+
+    const handleAddUser = (contact) => {
+   
     const newContact = { ...contact }
-    console.log("***********");
-    console.log("New contact");
-    console.log(newContact);
-    //setUsers([...users, newUser])
 
     const response = axios.post('https://localhost:7100/Contacts', {
         Name: newContact.name,
@@ -117,7 +115,13 @@ function Home() {
             <td style={styles.td}>{user.fax}</td>
             <td style={styles.td}>{user.email}</td>
             <td style={styles.td}>{user.lastUpdatedDate}</td>
-            <td style={styles.td}>{user.email}</td>
+            <td style={styles.td}>
+              <a onClick={(e) => {
+                e.preventDefault()
+                handleEdit(user)
+                }} title="Edit"><i className="fa-solid fa-pen"></i>
+                </a>
+              </td>
           </tr>
         ))}
       </tbody>
@@ -126,6 +130,7 @@ function Home() {
    <NewContact
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
+        isNew = {isNew}
         onSave={handleAddUser} 
       />
     </>

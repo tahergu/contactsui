@@ -51,11 +51,11 @@ const styles = {
   },
 }
 
-function NewUserModal({ isOpen, onClose, onSave }) {
+function NewUserModal({ isOpen, onClose, isNew, onSave }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-   const [phone, setPhone] = useState('')
-    const [fax, setFax] = useState('')
+  const [phone, setPhone] = useState('')
+  const [fax, setFax] = useState('')
 
   if (!isOpen) return null
 
@@ -78,7 +78,7 @@ function NewUserModal({ isOpen, onClose, onSave }) {
     <div style={styles.overlay}>
       <div style={styles.modal}>
         <button style={styles.closeButton} onClick={onClose}>×</button>
-        <h2>New User</h2>
+        {<h2>{isNew ? 'Add Contact' : 'Edit Contact'}</h2>}
         <form onSubmit={handleSubmit}>
           <input
             style={styles.input}
