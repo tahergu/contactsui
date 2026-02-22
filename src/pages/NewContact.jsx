@@ -54,6 +54,8 @@ const styles = {
 function NewUserModal({ isOpen, onClose, onSave }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+   const [phone, setPhone] = useState('')
+    const [fax, setFax] = useState('')
 
   if (!isOpen) return null
 
@@ -62,7 +64,7 @@ function NewUserModal({ isOpen, onClose, onSave }) {
     if (!name || !email) return alert('Please fill all fields')
 
     // Call parent save function
-    onSave({ name, email })
+    onSave({ name, email,phone,fax })
 
     // Clear form
     setName('')
@@ -91,6 +93,20 @@ function NewUserModal({ isOpen, onClose, onSave }) {
             placeholder="Email"
             value={email}
             onChange={e => setEmail(e.target.value)}
+          />
+           <input
+            style={styles.input}
+            type="text"
+            placeholder="Phone"
+            value={phone}
+            onChange={e => setPhone(e.target.value)}
+          />
+           <input
+            style={styles.input}
+            type="text"
+            placeholder="Fax"
+            value={fax}
+            onChange={e => setFax(e.target.value)}
           />
           <button style={styles.button} type="submit">Save</button>
         </form>

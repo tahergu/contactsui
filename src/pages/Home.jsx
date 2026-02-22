@@ -14,7 +14,7 @@ function Home() {
 ]
 
     const [contacts, setContacts] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
      const [modalOpen, setModalOpen] = useState(false)
 
@@ -23,13 +23,13 @@ function Home() {
         .then(response => {
             setContacts(response.data)
             console.log(response.data);
-            //setLoading(false)
+            setLoading(false)
         })
         .catch(err => {
             setError('Failed to fetch users')
             //setLoading(false)
         })
-    }, [])
+    }, [loading])
 
 
   const logout = () => {
@@ -42,6 +42,21 @@ function Home() {
       setModalOpen(true)
   }
 
+   const handleAddUser = (contact) => {
+    const newContact = { ...contact }
+    console.log("***********");
+    console.log("New contact");
+    console.log(newContact);
+    //setUsers([...users, newUser])
+
+    const response = axios.post('https://localhost:7100/Contacts', {
+        Name: newContact.name,
+        Email: newContact.email,
+        Phone: newContact.phone,
+        Fax: newContact.fax
+      });
+      setLoading(true);
+  }
 
   return (
     <>
@@ -111,7 +126,7 @@ function Home() {
    <NewContact
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        /* onSave={handleAddUser} */
+        onSave={handleAddUser} 
       />
     </>
   )
