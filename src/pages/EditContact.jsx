@@ -52,7 +52,7 @@ const styles = {
   },
 }
 
-function EditContact({ isOpen, onClose, contactId, onSave }) {
+function EditContact({ isOpen, onClose, contactId }) {
 
   if (!isOpen) return null
 
@@ -105,7 +105,9 @@ function EditContact({ isOpen, onClose, contactId, onSave }) {
         Email: contact.email,
         Phone: contact.phone,
         Fax: contact.fax
-      })
+      });
+
+      onClose();
   }
 
   return (

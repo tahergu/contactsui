@@ -14,7 +14,8 @@ function Home() {
     const [isNew, setIsNew] = useState(true)
     const [modalOpen, setModalOpen] = useState(false)
     const [editOpen, setEditOpen] = useState(false);
-    const [contactId, setContactId] = useState(0)
+    const [contactId, setContactId] = useState(0);
+    const [searchValue, setSearchValue] = useState('');
 
     useEffect(() => {
         axios.get('https://localhost:7100/Contacts') // example API
@@ -32,7 +33,7 @@ function Home() {
 
 
   const logout = () => {
-    
+  
     localStorage.removeItem('username')
     navigate('/login')
   }
@@ -43,14 +44,26 @@ function Home() {
     }
 
     const handleEdit = (contactId) => {
-      console.log("this is the contact id");
-      console.log(contactId);
       setContactId(contactId);
       setEditOpen(true)
     }
 
-    const handleUpdateUser = (contact) => {
-    
+    const onUpdateClose = () => {
+      setEditOpen(false);
+      setLoading(!loading);
+    }
+
+    const onSearchResults = (value) => {
+      axios.get('https://localhost:7100/Contacts/search?value=' + searchValue)
+      .then(response => {
+            setContacts(response.data);
+            
+            console.log(response.data);
+            setLoading(false)
+        })
+        .catch(err => {
+            setError('Failed to fetch contacts');
+        })
     }
     
     const handleAddUser = (contact) => {
@@ -85,8 +98,8 @@ function Home() {
      <div style={styles.scontainer}>
         <div style={styles.box}>
             <div style={styles.searchContainer}>
-                <input style={styles.searchInput} type="text" placeholder="Search..." className="search-input" />
-                <button onClick={logout} >
+                <input onChange={e => setSearchValue(e.target.value)}style={styles.searchInput} type="text" placeholder="Search..." className="search-input" />
+                <button onClick={onSearchResults} >
                         Search
                 </button>
             </div>
@@ -151,9 +164,8 @@ function Home() {
 
       <EditContact
         isOpen={editOpen}
-        onClose={() => setEditOpen(false)}
+        onClose={onUpdateClose}
         contactId ={contactId}
-        onSave={handleUpdateUser} 
       />
     </>
   )
