@@ -56,14 +56,12 @@ function EditContact({ isOpen, onClose, contactId, onSave }) {
 
   if (!isOpen) return null
 
-   const [contact, setContact] = useState([])
+   const [contact, setContact] = useState({})
 
    useEffect(() => {
          axios.get('https://localhost:7100/Contacts/' + contactId) // example API
         .then(response => {
             setContact(response.data);
-            console.log(response.data);
-            //setLoading(false)
         })
         .catch(err => {
             setError('Failed to fetch contact information.')
@@ -71,9 +69,43 @@ function EditContact({ isOpen, onClose, contactId, onSave }) {
         })
     }, [contactId])
 
-  const onUpdateSubmit = () => {
-    localStorage.removeItem('username')
-    navigate('/login')
+  const handleChangeName = (e) => {
+    setContact(prev => ({
+      ...prev,
+      name: e
+    }))
+  }
+
+  const handleChangeEmail = (e) => {
+  setContact(prev => ({
+      ...prev,
+      email: e
+    }))
+  }
+  
+  const handleChangePhone = (e) => {
+    setContact(prev => ({
+          ...prev,
+          phone: e
+        }))
+  }
+
+  const handleChangeFax = (e) => {
+    setContact(prev => ({
+      ...prev,
+      fax: e
+    }))
+  }
+
+  const onUpdateSubmit = (e) => {
+    e.preventDefault();
+
+    axios.put(`https://localhost:7100/Contacts/${contactId}/Update`, {
+        Name: contact.name,
+        Email: contact.email,
+        Phone: contact.phone,
+        Fax: contact.fax
+      })
   }
 
   return (
@@ -87,30 +119,30 @@ function EditContact({ isOpen, onClose, contactId, onSave }) {
             type="text"
             placeholder="Name"
             value={contact.name}
-            onChange={e => setName(e.target.value)}
+            onChange={e => handleChangeName(e.target.value)}
           />
           <input
             style={styles.input}
             type="email"
             placeholder="Email"
             value={contact.email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={e => handleChangeEmail(e.target.value)}
           />
            <input
             style={styles.input}
             type="text"
             placeholder="Phone"
              value={contact.phone}
-            onChange={e => setPhone(e.target.value)}
+            onChange={e => handleChangePhone(e.target.value)}
           />
            <input
             style={styles.input}
             type="text"
             placeholder="Fax"
             value={contact.fax}
-            onChange={e => setFax(e.target.value)}
+            onChange={e => handleChangeFax(e.target.value)}
           />
-          <button style={styles.button} type="submit">Save</button>
+          <button style={styles.button} type="submit">Update</button>
         </form>
       </div>
     </div>
